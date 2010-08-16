@@ -1,0 +1,29 @@
+development: &local
+  site_name:        Browser Add-on Server
+
+
+  db_type:        mysql
+  db_connection:  mysql://root@localhost/addonserver_dev
+
+
+production:
+  <<: *local
+
+  db_type:        mysql
+  db_connection:  mysql://root@localhost/addonserver_prod
+  # db_type:        sqlite
+  # db_connection:  sqlite3:///ROOT/tweetfs_prod.db
+
+
+staging:
+  <<: *local
+  
+  db_type:        sqlite
+  db_connection:  sqlite3:///ROOT/addonserver_staging.db
+
+
+test:
+  <<: *local
+
+  db_type:        sqlite
+  db_connection:  sqlite3:///ROOT/addonserver_test.db

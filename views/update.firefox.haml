@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+%RDF:RDF{:'xmlns:RDF' => "http://www.w3.org/1999/02/22-rdf-syntax-ns#", :'xmlns:em' => "http://www.mozilla.org/2004/em-rdf#"}
+  %RDF:Description{:about => "urn:mozilla:extension:#{@addon.firefox_app_id}"}
+    %em:updates
+      %RDF:Seq
+        - @versions.reverse.each do |version| # Ordered oldest - newest
+          %RDF:li
+            %RDF:Description
+              %em:version= version.version
+              %em:targetApplication
+                %RDF:Description
+                  - # em:id == firefox!
+                  %em:id {ec8030f7-c20a-464f-9b0e-13a3a9e97384}
+                  %em:minVersion= firefox_min_browser(version.min_browser_version)
+                  %em:maxVersion= firefox_max_browser(version.max_browser_version)
+                  %em:updateLink= version.url_download
+                  - if false # TODO
+                    %em:updateInfoURL= 'http://www.mysite.com/updateinfo2.2.xhtml'
+
+    - if false
+      - # A signature is only necessary if your add-on includes an updateKey in its install.rdf.
+      %em:signature= ''
