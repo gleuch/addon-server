@@ -3,13 +3,13 @@ class Addon
 
   property  :id,              Serial
   property  :name,            String
-  property  :slug,            String
+  property  :slug,            String,         :length => 64
   property  :description,     Text
-  property  :authors,         String
-  property  :website,         String
+  property  :authors,         String,         :length => 256
+  property  :website,         String,         :length => 256
   property  :download_count,  Integer
-  property  :firefox_app_id,  String,         :length => 128
-  property  :chrome_app_id,   String,         :length => 128
+  property  :firefox_app_id,  String,         :length => 256
+  property  :chrome_app_id,   String,         :length => 256
   property  :available,       Boolean
   property  :created_at,      DateTime
   property  :updated_at,      DateTime
@@ -27,7 +27,7 @@ class AddonVersion
   property  :browser,         String
   property  :version,         String
   property  :notes,           Text
-  property  :url_download,    String
+  property  :url_download,    String,         :length => 256
   property  :min_browser_version, String
   property  :max_browser_version, String
   property  :download_count,  Integer,        :default => 0
