@@ -78,7 +78,16 @@ helpers do
   end
   # Max Firefox version
   def firefox_max_browser(vers = nil)
-    !vers.blank? ? vers : '4.0.0.*'
+    !vers.blank? ? vers : '4.0b2'
+  end
+
+
+
+  def check_login_or_api_key(slug, key = false)
+    @addon = Addon.first(:slug => params[:slug]) rescue nil
+    raise MissingInfo, "Add-on could not be found." if @addon.blank?
+    return true if !key.blank? && key == @addon.api_key
+    login_required # Otherwise...
   end
 
 end

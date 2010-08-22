@@ -13,6 +13,8 @@ end
 
 # Show info for add-on
 get '/:slug' do
+  pass if %w(login logout signup).include?(params[:slug])
+
   # Check if exists
   @addon = Addon.first(:slug => params[:slug], :available => true) rescue nil
   raise MissingInfo, "Add-on information could not be found." if @addon.blank?
@@ -69,47 +71,93 @@ end
 
 
 
-get '/admin' do
+get '/developer' do
+  login_required
+  @addons = Addon.all(:user_id => current_user.id) rescue nil
+  haml :'developer/index'
 end
 
 
 # Addons
 
-get '/admin/new' do
+get '/developer/new' do
+  login_required
+
+  @addon = Addon.new
+  haml :'developer/edit'
 end
 
-post '/admin/create' do
+post '/developer/create' do
+  @addon = Addon.new
+  @addon.attributes = params[:addon].reject{|k,v| !Addon::ATTR_EDITABLE.include?(k.to_s)}
+
+  @addon.slug = @addon.title.sluggerize
+  @addon.api_key = Digest::SHA1.hexdigest(@addon.title)
+
+  if @addon.save
+    redirect '/' and return
+  else
+    haml :'developer/edit'
+  end
 end
 
-get '/admin/:slug/edit' do
-  @addon = Addon.first(:slug => params[:slug]) rescue nil
+get '/developer/:slug/edit' do
+  @addon = Addon.first(:slug => params[:slug], :user_id => current_user.id) rescue nil
   raise MissingInfo, "Add-on could not be found." if @addon.blank?
+  haml :'developer/edit'
 end
 
-post '/admin/:slug/update' do
-  @addon = Addon.first(:slug => params[:slug]) rescue nil
+post '/developer/:slug/update' do
+  @addon = Addon.first(:slug => params[:slug], :user_id => current_user.id) rescue nil
   raise MissingInfo, "Add-on could not be found." if @addon.blank?
+
+  # Cautious to ensure they don't override other opts.
+  @addon.attributes = params[:addon].reject{|k,v| !Addon::ATTR_EDITABLE.include?(k.to_s)}
+
+  if @addon.save
+    redirect '/' and return
+  else
+    haml :'developer/edit'
+  end
 end
 
 
 # Addon versions
 
-get '/admin/:slug/version/new' do
-  @addon = Addon.first(:slug => params[:slug]) rescue nil
-  raise MissingInfo, "Add-on could not be found." if @addon.blank?
+get '/developer/:slug/version/new' do
+  check_login_or_api_key(params[:slug], params[:auth_key])
+
 end
 
-post '/admin/:slug/version/create' do
-  @addon = Addon.first(:slug => params[:slug]) rescue nil
-  raise MissingInfo, "Add-on could not be found." if @addon.blank?
+post '/developer/:slug/version/create' do
+  check_login_or_api_key(params[:slug], params[:auth_key])
+
 end
 
-get '/admin/:slug/version/:version/edit' do
-  @addon = Addon.first(:slug => params[:slug]) rescue nil
-  raise MissingInfo, "Add-on could not be found." if @addon.blank?
+get '/developer/:slug/version/:version/edit' do
+  check_login_or_api_key(params[:slug], params[:auth_key])
+
 end
 
-post '/admin/:slug/version/:version/update' do
-  @addon = Addon.first(:slug => params[:slug]) rescue nil
-  raise MissingInfo, "Add-on could not be found." if @addon.blank?
+post '/developer/:slug/version/:version/update' do
+  check_login_or_api_key(params[:slug], params[:auth_key])
+
+end
+
+
+
+
+
+# Admin options
+
+get '/admin' do
+end
+
+get '/admin/:slug/approve' do
+end
+
+get '/admin/:slug/remove' do
+end
+
+get '/admin/:slug/feature' do
 end

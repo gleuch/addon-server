@@ -3,7 +3,7 @@ require 'sinatra'
 
 # Configure! ---------------------------------------
 
-libs = %w(haml configatron logger dm-core dm-timestamps dm-validations dm-ar-finders dm-aggregates dm-types libs/models libs/actions libs/helpers libs/libs)
+libs = %w(haml configatron logger dm-core dm-timestamps dm-validations dm-ar-finders dm-aggregates dm-types)
 libs << 'sinatra-authentication'
 libs.each{|lib| require lib}
 
@@ -14,6 +14,8 @@ configure do |config|
 
   configatron.configure_from_yaml("#{ROOT}/settings.yml", :hash => Sinatra::Application.environment.to_s)
 
+
+  %w(libs/models libs/actions libs/helpers libs/libs).each{|lib| require lib}
   DataMapper.setup(:default, configatron.db_connection.gsub(/ROOT/, ROOT))
   DataMapper.auto_upgrade!
 

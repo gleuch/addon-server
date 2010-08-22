@@ -1,7 +1,11 @@
 class Addon
   include DataMapper::Resource
 
+  ATTR_EDITABLE = [:name, :description, :authors, :website, :firefox_app_id, :chrome_app_id, :safari_app_id, :available]
+
+
   property  :id,              Serial
+  property  :user_id,         Integer
   property  :name,            String
   property  :slug,            String,         :length => 64
   property  :description,     Text
@@ -10,17 +14,21 @@ class Addon
   property  :download_count,  Integer
   property  :firefox_app_id,  String,         :length => 256
   property  :chrome_app_id,   String,         :length => 256
+  property  :safari_app_id,   String,         :length => 256
+  property  :api_key,         String,         :length => 64
   property  :available,       Boolean
   property  :created_at,      DateTime
   property  :updated_at,      DateTime
 
-
+  has 1,  :user,        :model => 'DmUser'
   has n,  :versions,    :model => 'AddonVersion',   :order => [:version.desc]
   has n,  :downloads,   :model => 'AddonDownload',  :order => [:download_date.desc]
 end
 
 class AddonVersion
   include DataMapper::Resource
+
+  ATTR_EDITABLE = [:browser, :version, :notes, :url_download, :min_browser_version, :max_browser_version, :available]
 
   property  :id,              Serial
   property  :addon_id,        Integer
