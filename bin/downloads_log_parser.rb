@@ -96,7 +96,7 @@ unless @downloads.blank?
 
         # TODO : Bulk insert new records!
 
-        stat ||= AddonDownload.new(:uuid => addon_daily_hash, :addon_id => addon, :download_type => 'daily', :download_date => day)
+        stat ||= AddonDownload.new(:uuid => addon_daily_hash, :addon_id => addon, :addon_version_id => download[:version], :download_type => 'daily', :download_date => day)
         stat.download_count += downloads_count
         stat.uniq_count += uniqs_count
         STDERR.puts "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] COULD NOT SAVE #{addon_daily_hash}!" unless stat.save
