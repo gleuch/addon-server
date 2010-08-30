@@ -1,0 +1,53 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin: 0; padding: 0; border: 0; outline: 0; font-size: 100%; vertical-align: baseline; background: transparent;}
+header, hgroup, nav, article, section, details, aside, footer {clear: both; display: block;}
+body {line-height: 1;}
+dl dt {font-weight: bold;}
+ol, ul {list-style: none;}
+blockquote, q {quotes: none;}
+blockquote:before, blockquote:after, q:before, q:after {content: ''; content: none;}
+:focus {outline: 0;}
+ins {text-decoration: none;}
+del {text-decoration: line-through;}
+table {border-collapse: collapse; border-spacing: 0;}
+body, h1, h2, h3, h4, h5, h6 {font-family: Helvetica, Arial, Verdana, sans-serif; line-height: 1.2em;}
+p, blockquote, li, dt, dd {font-size: 1.6em; font-family: Helvetica, Arial, Verdana, sans-serif; color: #222; line-height: 1.1em;}
+blockquote p, blockquote blockquote, li li {font-size: 1.0em;}
+dt {font-weight: bold;}
+
+a {color: #ee181e; text-decoration: none;}
+a:hover {color: #000;}
+
+h1 {font-size: 2.4em; color: #222;}
+h2 {font-size: 2.0em; color: #222;}
+h3 {font-size: 1.6em; color: #222;}
+
+
+/* ----- */
+
+
+.left {clear: none; float: left;}
+.right {clear: none; float: right;}
+.c {clear: both; float: none;}
+.rel {position: relative;}
+.abs {position: absolute;}
+.c:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.sanserif {font-family: Helvetica, Arial, Verdana, sans-serif;}
+.serif {font-family: "Times New Roman", Times, Georgia, sans-serif;}
+.b {font-weight: bold;}
+.i {font-style: italic;}
+.tl {text-align: left;}
+.tr {text-align: right;}
+.tc {text-align: center;}
+
+@media only screen and (max-device-width: 480px) {
+  html {-webkit-text-size-adjust: none}
+  a {-webkit-tap-highlight-color: rgba(200,0,0,0.4);}
+}
+
+/* ----- */
+
+
+
+body {background: #fff; font-size: 62.5%;}
+
+.boxed {width: 950px; margin: 0 auto;}

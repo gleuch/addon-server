@@ -1,12 +1,14 @@
 require 'rubygems'
 require 'sinatra'
 
-# Configure! ---------------------------------------
-
-libs = %w(haml configatron logger dm-core dm-timestamps dm-validations dm-ar-finders dm-aggregates dm-types)
+libs = %w(haml configatron logger rack-flash dm-core dm-timestamps dm-validations dm-ar-finders dm-aggregates dm-types libs/models libs/actions libs/helpers libs/libs)
 libs << 'sinatra-authentication'
 libs.each{|lib| require lib}
 
+use Rack::Session::Cookie, :secret => 'ARTZILLA IZ SICK!!!!'
+use Rack::Flash
+
+# Configure! ---------------------------------------
 configure do |config|
   ROOT = File.expand_path(File.dirname(__FILE__))
 
@@ -14,10 +16,10 @@ configure do |config|
 
   configatron.configure_from_yaml("#{ROOT}/settings.yml", :hash => Sinatra::Application.environment.to_s)
 
-
-  %w(libs/models libs/actions libs/helpers libs/libs).each{|lib| require lib}
   DataMapper.setup(:default, configatron.db_connection.gsub(/ROOT/, ROOT))
   DataMapper.auto_upgrade!
+
+
 
   DOWNLOAD_LOGGER = Logger.new("log/downloads.log") # Downloads log
 
@@ -27,7 +29,7 @@ end
 
 
 before do
-  @_flash, session[:_flash] = session[:_flash], nil if session[:_flash]
+
 end
 
 
@@ -57,18 +59,18 @@ end
 
 
 
-configure :development do
-  # set :raise_errors, Proc.new { false }
-  # set :show_exceptions, false
-
-  class Sinatra::Reloader < Rack::Reloader
-     def safe_load(file, mtime, stderr = $stderr)
-       if file == __FILE__
-         ::Sinatra::Application.reset!
-         stderr.puts "#{self.class}: reseting routes"
-       end
-       super
-     end
-  end 
-  use Sinatra::Reloader
-end
+# configure :development do
+#   # set :raise_errors, Proc.new { false }
+#   # set :show_exceptions, false
+# 
+#   class Sinatra::Reloader < Rack::Reloader
+#      def safe_load(file, mtime, stderr = $stderr)
+#        if file == __FILE__
+#          ::Sinatra::Application.reset!
+#          stderr.puts "#{self.class}: reseting routes"
+#        end
+#        super
+#      end
+#   end 
+#   use Sinatra::Reloader
+# end

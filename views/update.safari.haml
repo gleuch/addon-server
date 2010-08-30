@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+%plist{:version => "1.0"}
+  %dict
+    %key Extension Updates
+    %array
+      %dict
+        %key CFBundleIdentifier
+        %string= @addon.safari_app_id
+        %key Developer Identifier
+        %string= @addon.safari_dev_id
+        %key CFBundleVersion
+        %string= (!@versions.first.bundle.blank? ? @versions.first.bundle : @versions.first.version)
+        %key CFBundleShortVersionString
+        %string= @versions.first.version
+        %key URL
+        %string= @versions.first.url_download

@@ -1,0 +1,19 @@
+%h1= @addon.name
+
+- unless @versions.blank?
+  %p You have #{@versions.count} add-on version#{@versions.count != 1 ? 's' : ''}.
+  %section#versions_list
+    - @versions.each do |version|
+      %article.addon{:id => "addon#{@addon.id}_#{version.id}", :class => (version.available ? '' : 'unpublished')}
+        %h3
+          %a{:href => "/developer/#{@addon.slug}/version/#{version.id}"}
+            #{version.browser.capitalize}: Version #{version.version}
+        %p
+          %strong Downloads:
+          = version.download_count
+        %p
+          %strong Released:
+          = version.created_at
+
+- else
+  %p You have no versions for this add-on.

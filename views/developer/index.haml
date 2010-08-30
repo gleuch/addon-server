@@ -1,0 +1,20 @@
+%h1 Your Add-ons
+- unless @addons.blank?
+  %p You have #{@addons.count} add-on#{@addons.count != 1 ? 's' : ''}.
+  %section#addons_list
+    - @addons.each do |addon|
+      %article.addon{:id => "addon#{addon.id}", :class => (addon.available ? '' : 'unpublished')}
+        %h3
+          %a{:href => "/developer/#{addon.slug}"}= addon.name
+      
+        %p
+          %strong Downloads:
+          = addon.download_count
+        %p
+          %strong API Key:
+          = addon.api_key
+
+- else
+  %p
+    You have no add-ons.
+    %a{:href => '/developer/new'} Add one!

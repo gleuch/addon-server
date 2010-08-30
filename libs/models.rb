@@ -15,12 +15,17 @@ class Addon
   property  :firefox_app_id,  String,         :length => 256
   property  :chrome_app_id,   String,         :length => 256
   property  :safari_app_id,   String,         :length => 256
+  property  :safari_dev_id,   String,         :length => 16
   property  :api_key,         String,         :length => 64
   property  :available,       Boolean
   property  :created_at,      DateTime
   property  :updated_at,      DateTime
 
-  has 1,  :user,        :model => 'DmUser'
+
+  def self.available; all(:available => true); end
+
+
+  belongs_to  :user,    :model => 'DmUser'
   has n,  :versions,    :model => 'AddonVersion',   :order => [:version.desc]
   has n,  :downloads,   :model => 'AddonDownload',  :order => [:download_date.desc]
 end
@@ -30,10 +35,12 @@ class AddonVersion
 
   ATTR_EDITABLE = [:browser, :version, :notes, :url_download, :min_browser_version, :max_browser_version, :available]
 
+
   property  :id,              Serial
   property  :addon_id,        Integer
   property  :browser,         String
   property  :version,         String
+  property  :bundle,          String
   property  :notes,           Text
   property  :url_download,    String,         :length => 256
   property  :min_browser_version, String
@@ -42,6 +49,10 @@ class AddonVersion
   property  :available,       Boolean
   property  :created_at,      DateTime
   property  :updated_at,      DateTime
+
+
+  def self.available; all(:available => true); end
+
 
   belongs_to :addon
   has n,  :downloads,   :model => 'AddonDownload',  :order => [:download_date.desc]
@@ -52,11 +63,13 @@ class AddonDownload
   include DataMapper::Resource
 
   property  :id,                Serial
-  property  :stat_hash,         String,       :length => 32
+  property  :download_type,     String
+  property  :uuid,              String,       :length => 32
   property  :addon_id,          Integer
   property  :addon_version_id,  Integer
   property  :download_date,     Date
   property  :download_count,    Integer,      :default => 0
+  property  :uniq_count,        Integer,      :default => 0
   property  :updated_at,        DateTime
 
 

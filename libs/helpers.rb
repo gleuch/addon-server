@@ -5,10 +5,9 @@ helpers do
 
   def track_download(addon = @addon, version = @version)
     str = []
-    str << "[#{Time.now.to_s}]"
+    str << "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}]"
     str << @addon.id
-    str << @version.browser
-    str << @version.version
+    str << @version.id
     str << request.env['REMOTE_ADDR']
 
     download_logger.info( str.join("\t") )

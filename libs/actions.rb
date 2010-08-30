@@ -6,70 +6,6 @@
 #
 
 
-# List all add-ons
-get '/addons' do
-  @addons = Addon.all(:available => true, :order => [:updated_at.desc]) rescue nil
-end
-
-# Show info for add-on
-get '/:slug' do
-  pass if %w(login logout signup).include?(params[:slug])
-
-  # Check if exists
-  @addon = Addon.first(:slug => params[:slug], :available => true) rescue nil
-  raise MissingInfo, "Add-on information could not be found." if @addon.blank?
-end
-
-
-# List all known downloads for add-on
-get '/:slug/downloads' do
-  # Check if exists
-  @addon = Addon.first(:slug => params[:slug], :available => true) rescue nil
-  raise MissingInfo, "Add-on information could not be found." if @addon.blank?
-end
-
-
-# Generate browser update manifest for add-on
-get '/:slug/updates/:browser' do
-  browser_whitelist(params[:browser])
-
-  # Check if exists
-  @addon = Addon.first(:slug => params[:slug], :available => true) rescue nil
-  raise MissingInfo, "Add-on information could not be found." if @addon.blank?
-
-  @versions = @addon.versions.all(:browser => params[:browser], :available => true) rescue nil
-  raise MissingInfo, "Version information for #{@addon.name} for #{params[:browser].capitalize} could not be found." if @versions.blank?
-
-  view = "update.#{params[:browser]}".to_sym
-  haml view, :layout => false
-end
-
-
-# Redirect to the URL for the download link for this browser add-on
-get '/:slug/downloads/:browser' do
-  browser_whitelist(params[:browser])
-
-  # Check if exists
-  @addon = Addon.first(:slug => params[:slug], :available => true) rescue nil
-  raise MissingInfo, "Add-on information could not be found." if @addon.blank?
-
-  unless params[:version].blank?
-    @version = @addon.versions.first(:browser => params[:browser], :version => params[:version], :available => true) rescue nil
-  else
-    @version = @addon.versions.first(:browser => params[:browser], :available => true) rescue nil
-  end
-
-  raise MissingInfo, "Version information for #{@addon.name} could not be found." if @version.blank?
-  # raise MissingInfo, "Download link for #{@addon.name}, version #{@version.version} for #{params[:browser].capitalize} is not specified." if @version.download_url.blank?
-
-  track_download(@addon, @version) # Add to download logger
-  halt
-  redirect @version.download_url, :status => 307
-end
-
-
-
-
 
 get '/developer' do
   login_required
@@ -77,8 +13,6 @@ get '/developer' do
   haml :'developer/index'
 end
 
-
-# Addons
 
 get '/developer/new' do
   login_required
@@ -91,8 +25,8 @@ post '/developer/create' do
   @addon = Addon.new
   @addon.attributes = params[:addon].reject{|k,v| !Addon::ATTR_EDITABLE.include?(k.to_s)}
 
-  @addon.slug = @addon.title.sluggerize
-  @addon.api_key = Digest::SHA1.hexdigest(@addon.title)
+  @addon.slug = @addon.name.sluggerize
+  @addon.api_key = Digest::SHA1.hexdigest(@addon.name)
 
   if @addon.save
     redirect '/' and return
@@ -120,6 +54,18 @@ post '/developer/:slug/update' do
     haml :'developer/edit'
   end
 end
+
+# Addons
+get '/developer/:slug' do
+  login_required
+
+  @addon = Addon.first(:slug => params[:slug], :user_id => current_user.id) rescue nil
+  raise MissingInfo, "Add-on could not be found." if @addon.blank?
+  @versions = @addon.versions.all(:order => [:version.desc, :browser.asc]) rescue nil
+
+  haml :'developer/show'
+end
+
 
 
 # Addon versions
@@ -160,4 +106,91 @@ get '/admin/:slug/remove' do
 end
 
 get '/admin/:slug/feature' do
+end
+
+
+
+
+
+# List all add-ons
+get '/addons' do
+  @addons = Addon.all(:available => true, :order => [:updated_at.desc]) rescue nil
+end
+
+# List all known downloads for add-on
+get '/:slug/downloads' do
+  # Check if exists
+  @addon = Addon.available.first(:slug => params[:slug]) rescue nil
+  raise MissingInfo, "Add-on information could not be found." if @addon.blank?
+end
+
+
+# Generate browser update manifest for add-on
+get '/:slug/updates/:browser/info' do
+  browser_whitelist(params[:browser])
+
+  # Check if exists
+  @addon = Addon.available.first(:slug => params[:slug]) rescue nil
+  raise MissingInfo, "Add-on information could not be found." if @addon.blank?
+
+  @versions = @addon.versions.available.all(:browser => params[:browser]) rescue nil
+  raise MissingInfo, "Version information for #{@addon.name} for #{params[:browser].capitalize} could not be found." if @versions.blank?
+
+  # view = "info.#{params[:browser]}".to_sym
+  view = "info.browser".to_sym
+  haml view, :layout => false
+end
+
+# Generate browser update manifest for add-on
+get '/:slug/updates/:browser' do
+  browser_whitelist(params[:browser])
+
+  # Check if exists
+  @addon = Addon.available.first(:slug => params[:slug]) rescue nil
+  raise MissingInfo, "Add-on information could not be found." if @addon.blank?
+
+  @versions = @addon.versions.available.all(:browser => params[:browser]) rescue nil
+  raise MissingInfo, "Version information for #{@addon.name} for #{params[:browser].capitalize} could not be found." if @versions.blank?
+
+  view = "update.#{params[:browser]}".to_sym
+  haml view, :layout => false
+end
+
+
+# Redirect to the URL for the download link for this browser add-on
+get '/:slug/downloads/:browser' do
+  browser_whitelist(params[:browser])
+
+  # Check if exists
+  @addon = Addon.available.first(:slug => params[:slug]) rescue nil
+  raise MissingInfo, "Add-on information could not be found." if @addon.blank?
+  
+  unless params[:version].blank?
+    @version = @addon.versions.available.first(:browser => params[:browser], :version => params[:version]) rescue nil
+  else
+    @version = @addon.versions.available.first(:browser => params[:browser]) rescue nil
+  end
+
+  raise MissingInfo, "Version information for #{@addon.name} could not be found." if @version.blank?
+  # raise MissingInfo, "Download link for #{@addon.name}, version #{@version.version} for #{params[:browser].capitalize} is not specified." if @version.download_url.blank?
+
+  track_download(@addon, @version) # Add to download logger
+  redirect @version.download_url, :status => 307
+end
+
+
+# Show info for add-on
+get '/:slug' do
+  pass if %w(login logout signup).include?(params[:slug]) || params[:slug].blank? # Ugh..
+  # pass if %w(login logout signup latest popular featured).include?(params[:slug]) || params[:slug].blank? # Ugh..
+
+  # Check if exists
+  @addon = Addon.available.first(:slug => params[:slug]) rescue nil
+  raise MissingInfo, "Add-on information could not be found." if @addon.blank?
+end
+
+
+get '/' do
+  @addons = Addon.all(:available => true, :order => [:updated_at.desc]) rescue nil
+  haml :index
 end

@@ -1,0 +1,25 @@
+- unless @addons.blank?
+  - @addons.each do |addon|
+    %article.addon.c{:id => "addon_#{addon.id}"}
+      %section.photo.left
+        [PHOTO]
+      %section.info.left
+        %hgroup
+          %h2
+            %a{:href => "/#{addon.slug}"}= addon.name
+          - unless addon.authors.blank?
+            %h6 by #{addon.authors}
+        - unless addon.description.blank?
+          %p= addon.description
+      %aside.status.left
+        %p RATINGS HERE!
+        %p DOWNLOADS HERE
+      %summary.downloads.right
+        LIST OF DOWNLOADS HERE
+        %br
+        WITH YOUR BROWSER SELECTED
+        %br
+        OR GREYED OUT IF NOT AVAIL
+- else
+  %h1 No add-ons here.
+  %p Maybe the developers are just being shy. Check back later!
