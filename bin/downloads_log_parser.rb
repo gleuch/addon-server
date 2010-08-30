@@ -6,7 +6,7 @@ require 'sinatra'
 
 ROOT = File.expand_path("../#{File.dirname(__FILE__)}")
 
-libs = %w(digest/sha1 configatron dm-core dm-timestamps dm-validations dm-ar-finders dm-aggregates dm-types ROOT/libs/models)
+libs = %w(digest/sha1 configatron dm-core dm-timestamps dm-validations dm-ar-finders dm-aggregates dm-types sinatra-authentication ROOT/libs/models)
 libs.each{|lib| require lib.gsub(/ROOT/, ROOT)}
 
 configatron.configure_from_yaml("#{ROOT}/settings.yml", :hash => Sinatra::Application.environment.to_s)
@@ -25,8 +25,8 @@ STDERR.puts "\n\n[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] Starting downloads 
 
 # Move file so we're working fresh and cat null it...
 STDERR.puts "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] Moving downloads log..."
-# `cp -f #{download_log_filename} #{tmp_download_log_filename} && cat /dev/null > #{download_log_filename}`
-`cp -f #{download_log_filename} #{tmp_download_log_filename}`
+`cp -f #{download_log_filename} #{tmp_download_log_filename} && cat /dev/null > #{download_log_filename}`
+# `cp -f #{download_log_filename} #{tmp_download_log_filename}`
 STDERR.puts "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] Move complete!\n\n"
 
 
@@ -96,10 +96,10 @@ unless @downloads.blank?
 
         # TODO : Bulk insert new records!
 
-        stat ||= AddonDownload.new(:uuid => addon_daily_hash, :addon_id => addon, :download_type => 'daily', :viewed_at => day)
-#         stat.download_count += 1
-#         stat.uniq_count += 1
-#         stat.save
+        stat ||= AddonDownload.new(:uuid => addon_daily_hash, :addon_id => addon, :download_type => 'daily', :download_date => day)
+        stat.download_count += downloads_count
+        stat.uniq_count += uniqs_count
+        STDERR.puts "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] COULD NOT SAVE #{addon_daily_hash}!" unless stat.save
 
         @summaries[addon] ||= {}
         @summaries[addon][day] = {:ips => []}
@@ -118,7 +118,7 @@ end
 
 
 # Remove tmp file...
-# `rm #{tmp_download_log_filename}`
+`rm #{tmp_download_log_filename}`
 
 
 

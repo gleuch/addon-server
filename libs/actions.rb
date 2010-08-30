@@ -153,6 +153,7 @@ get '/:slug/updates/:browser' do
   raise MissingInfo, "Version information for #{@addon.name} for #{params[:browser].capitalize} could not be found." if @versions.blank?
 
   view = "update.#{params[:browser]}".to_sym
+  headers('Content-type' => 'text/xml;charset=utf-8') if %w(firefox chrome).include?(params[:browser])
   haml view, :layout => false
 end
 
@@ -172,10 +173,10 @@ get '/:slug/downloads/:browser' do
   end
 
   raise MissingInfo, "Version information for #{@addon.name} could not be found." if @version.blank?
-  # raise MissingInfo, "Download link for #{@addon.name}, version #{@version.version} for #{params[:browser].capitalize} is not specified." if @version.download_url.blank?
+  raise MissingInfo, "Download link for #{@addon.name}, version #{@version.version} for #{params[:browser].capitalize} is not specified." if @version.url_download.blank?
 
   track_download(@addon, @version) # Add to download logger
-  redirect @version.download_url, :status => 307
+  redirect @version.url_download, :status => 307
 end
 
 

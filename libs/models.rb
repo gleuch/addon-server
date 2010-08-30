@@ -64,7 +64,7 @@ class AddonDownload
 
   property  :id,                Serial
   property  :download_type,     String
-  property  :uuid,              String,       :length => 32
+  property  :uuid,              String,       :length => 64
   property  :addon_id,          Integer
   property  :addon_version_id,  Integer
   property  :download_date,     Date

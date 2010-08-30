@@ -14,8 +14,7 @@
                   %em:minVersion= firefox_min_browser(version.min_browser_version)
                   %em:maxVersion= firefox_max_browser(version.max_browser_version)
                   %em:updateLink= version.url_download
-                  - if false # TODO
-                    %em:updateInfoURL= 'http://www.mysite.com/updateinfo2.2.xhtml'
+                  %em:updateInfoURL http://#{request.env['HTTP_HOST']}/#{params[:slug]}/updates/#{params[:browser]}/info
 
     - if false
       - # A signature is only necessary if your add-on includes an updateKey in its install.rdf.
