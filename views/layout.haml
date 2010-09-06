@@ -5,33 +5,35 @@
     %title #{@title} #{!@title.blank? ? " | " : ''} #{configatron.site_name}
     %link{:rel => 'stylesheet', :href => "/css/app.css"}
 
-    %body
-      #container.boxed
-        %header.c
-          %h1.left
-            %a{:href => '/'}= configatron.site_name
-          %nav.left
-            %dl.c
-              %dd.left
-                %a{:href => '/latest'} Latest
-              %dd.left
-                %a{:href => '/popular'} Popular
+  %body
+    #container.boxed
+      %header#header.c
+        %h1#logo.left
+          %a{:href => '/'}= configatron.site_name
+        %nav#nav.left
+          %dl.c
+            %dd.left
+              %a{:href => '/latest'} Latest
+            %dd.left
+              %a{:href => '/popular'} Popular
+
+        - if configatron.allow_submissions
           %aside.right
             %dl.c
               %dd.left
                 %a{:href => '/submit'} Submit Your Add-on
               %dd.left
                 %a{:href => '/login'} Login
-      
-        - unless flash.blank?
-          %details#flashes
-            - unless flash[:notice].blank?
-              #flash_notice= flash[:notice]
-            - unless flash[:error].blank?
-              #flash_notice= flash[:error]
+    
+      - unless flash.blank?
+        %details#flashes
+          - unless flash[:notice].blank?
+            #flash_notice= flash[:notice]
+          - unless flash[:error].blank?
+            #flash_notice= flash[:error]
 
-        %section#content_area
-          = yield
+      %section#content_area
+        = yield
 
-    %footer.boxed.tc
-      %p This would be the footer
+  %footer.boxed.tc
+    %p This would be the footer

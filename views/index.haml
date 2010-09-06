@@ -12,14 +12,14 @@
         - unless addon.description.blank?
           %p= addon.description
       %aside.status.left
-        %p RATINGS HERE!
-        %p DOWNLOADS HERE
+        - if false
+          %p RATINGS HERE!
+        %details.downloads_count
+          %h6= addon.download_count.to_i.commify
+          %p Total #{"Download".pluralize(addon.downloads_count)}
       %summary.downloads.right
-        LIST OF DOWNLOADS HERE
-        %br
-        WITH YOUR BROWSER SELECTED
-        %br
-        OR GREYED OUT IF NOT AVAIL
+        = display_browser_downloads(addon)
+
 - else
   %h1 No add-ons here.
   %p Maybe the developers are just being shy. Check back later!

@@ -89,4 +89,59 @@ helpers do
     login_required # Otherwise...
   end
 
+
+  def get_browser_by_user_agent
+    ua = request.env['HTTP_USER_AGENT']
+    return 'camino' if ua =~ /Camino/
+    return 'firefox' if ua =~ /Firefox/
+    return 'chrome' if ua =~ /Chrome/
+    return 'safari' if ua =~ /AppleWebKit/
+    return 'opera' if ua =~ /Opera/
+    return 'ie' if ua =~ /MSIE/
+    return nil
+  end
+
+
+  def browser_display_title(browser)
+    return case browser
+      when 'firefox'; 'Firefox'
+      when 'chrome'; 'Chrome'
+      when 'safari'; 'Safari'
+      when 'camino'; 'Camino'
+      when 'opera'; 'Opera'
+      when 'ie'; 'Internet Explorer'
+      else; 'Unknown'
+    end
+  end
+
+
+  def display_browser_downloads(addon)
+    ua, browsers, str = get_browser_by_user_agent, addon.browsers, ''
+
+    latest_version = addon.versions.first(:order => [:version.desc]).version rescue nil
+    return if latest_version.blank?
+
+    has_version = addon.versions.first(:version => latest_version, :browser => ua) rescue nil
+
+    str << "<section class='version browser featured #{ua}'>"
+    if browsers.include?(ua) && !has_version.blank?
+      str << "<h6><a href='/#{addon.slug}/downloads/#{has_version.browser}'>Download Now</a></h6>"
+      str << "<p>Version #{has_version.version}</p>"
+    else
+      str << "<p>The latest version is not available for your browser (#{browser_display_title(ua)}).</p>"
+    end
+    str << "</section>"
+
+    other_versions = addon.versions.all(:version => latest_version, :browser.not => ua, :order => [:browser.asc]) rescue nil
+    unless other_versions.blank?
+      str << "<section class='version browser all'>"
+      str << "Also available for:"
+      str << "<dl class='c'>"
+      other_versions.each{|version| str << "<dd class='#{version.browser} download left'><a href='/#{addon.slug}/downloads/#{version.browser}'>#{browser_display_title(version.browser)}</a></dd>"}
+      str << "</dl>"
+      str << "</section>"
+    end
+
+    str
+  end
 end

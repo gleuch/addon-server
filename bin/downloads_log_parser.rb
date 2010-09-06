@@ -117,6 +117,11 @@ else
 end
 
 
+Addon.all.each do |addon|
+  addon.download_count = addon.downloads_count
+  addon.save
+end
+
 # Remove tmp file...
 `rm #{tmp_download_log_filename}`
 

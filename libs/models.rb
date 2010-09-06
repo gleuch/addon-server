@@ -24,6 +24,14 @@ class Addon
 
   def self.available; all(:available => true); end
 
+  # These are temp if called in public views. Logger should incremenet the download counter on this table.
+  def downloads_count; AddonDownload.sum(:download_count, :addon_id => self.id).to_i rescue 0; end
+  def unique_download_count; AddonDownload.sum(:unique_count, :addon_id => self.id).to_i rescue 0; end
+
+  def browsers
+    self.versions.map{|addon| addon.browser}.compact.uniq
+  end
+
 
   belongs_to  :user,    :model => 'DmUser'
   has n,  :versions,    :model => 'AddonVersion',   :order => [:version.desc]

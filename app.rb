@@ -1,7 +1,9 @@
 require 'rubygems'
 require 'sinatra'
 
-libs = %w(haml configatron logger rack-flash dm-core dm-timestamps dm-validations dm-ar-finders dm-aggregates dm-types libs/models libs/actions libs/helpers libs/libs)
+libs = %w(haml configatron logger rack-flash dm-core dm-timestamps dm-validations dm-ar-finders dm-aggregates dm-types libs/models libs/helpers libs/libs)
+%w(developer admin addons).each{|r| libs << "libs/#{r}/actions"}
+
 libs << 'sinatra-authentication'
 libs.each{|lib| require lib}
 
