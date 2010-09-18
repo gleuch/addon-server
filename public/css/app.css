@@ -65,3 +65,6 @@ body {background: #fff; font-size: 62.5%;}
 
 
 /* List */
+article.addon {}
+article.addon .photo {}
+article.addon .photo img {width: 128px; height: 128px;}

@@ -62,7 +62,7 @@ get '/:slug/downloads/:browser' do
   raise MissingInfo, "Download link for #{@addon.name}, version #{@version.version} for #{params[:browser].capitalize} is not specified." if @version.url_download.blank?
 
   track_download(@addon, @version) # Add to download logger
-  redirect @version.url_download, :status => 307 # Is this right code?
+  redirect "#{@version.url_download.gsub(/%data%/, params[:data] || '')}", :status => 307 # Is this right code?
 end
 
 
