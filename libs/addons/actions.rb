@@ -1,12 +1,13 @@
 # List all add-ons
 get '/addons' do
-  @addons = Addon.all(:available => true, :order => [:updated_at.desc]) rescue nil
+  @addons = Addon.available.published.all(:order => [:updated_at.desc]) rescue nil
+  haml :index
 end
 
 # List all known downloads for add-on
 get '/:slug/downloads' do
   # Check if exists
-  @addon = Addon.available.first(:slug => params[:slug]) rescue nil
+  @addon = Addon.available.published.first(:slug => params[:slug]) rescue nil
   raise MissingInfo, "Add-on information could not be found." if @addon.blank?
 end
 
@@ -37,6 +38,7 @@ get '/:slug/updates/:browser' do
 
   @versions = @addon.versions.available.all(:browser => params[:browser]) rescue nil
   raise MissingInfo, "Version information for #{@addon.name} for #{params[:browser].capitalize} could not be found." if @versions.blank?
+  raise MissingInfo, "This download requires certain data information." if @versions.first.url_download.match(/%data%/i) && params[:data].blank?
 
   view = "update.#{params[:browser]}".to_sym
   headers('Content-type' => 'text/xml;charset=utf-8') if %w(firefox chrome).include?(params[:browser])
@@ -62,7 +64,8 @@ get '/:slug/downloads/:browser' do
   raise MissingInfo, "Download link for #{@addon.name}, version #{@version.version} for #{params[:browser].capitalize} is not specified." if @version.url_download.blank?
 
   track_download(@addon, @version) # Add to download logger
-  redirect "#{@version.url_download.gsub(/%data%/, params[:data] || '')}", :status => 307 # Is this right code?
+  raise MissingInfo, "This download requires certain data information." if @version.url_download.match(/%data%/i) && params[:data].blank?
+  redirect "#{@version.url_download.gsub(/%data%/i, params[:data] || '')}", :status => 307 # Is this right code?
 end
 
 
@@ -72,11 +75,11 @@ get '/:slug' do
   # pass if %w(login logout signup latest popular featured).include?(params[:slug]) || params[:slug].blank? # Ugh..
 
   # Check if exists
-  @addon = Addon.available.first(:slug => params[:slug]) rescue nil
+  @addon = Addon.available.published.first(:slug => params[:slug]) rescue nil
   raise MissingInfo, "Add-on information could not be found." if @addon.blank?
 end
 
 get '/' do
-  @addons = Addon.all(:available => true, :order => [:updated_at.desc]) rescue nil
+  @addons = Addon.available.published.all(:order => [:updated_at.desc]) rescue nil
   haml :index
 end

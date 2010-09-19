@@ -18,11 +18,13 @@ class Addon
   property  :safari_dev_id,   String,         :length => 16
   property  :api_key,         String,         :length => 64
   property  :available,       Boolean
+  property  :published,       Boolean,        :default => true
   property  :created_at,      DateTime
   property  :updated_at,      DateTime
 
 
   def self.available; all(:available => true); end
+  def self.published; all(:published => true); end
 
   # These are temp if called in public views. Logger should incremenet the download counter on this table.
   def downloads_count; AddonDownload.sum(:download_count, :addon_id => self.id).to_i rescue 0; end
@@ -55,11 +57,13 @@ class AddonVersion
   property  :max_browser_version, String
   property  :download_count,  Integer,        :default => 0
   property  :available,       Boolean
+  property  :published,       Boolean,        :default => true
   property  :created_at,      DateTime
   property  :updated_at,      DateTime
 
 
   def self.available; all(:available => true); end
+  def self.published; all(:published => true); end
 
 
   belongs_to :addon

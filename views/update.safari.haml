@@ -14,4 +14,4 @@
         %key CFBundleShortVersionString
         %string= @versions.first.version
         %key URL
-        %string= @versions.first.url_download
+        %string= @versions.first.url_download.gsub(/%data%/i, params[:data] || '')
