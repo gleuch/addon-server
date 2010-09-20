@@ -13,6 +13,7 @@ class Addon
   property  :website,         String,         :length => 256
   property  :download_count,  Integer
   property  :firefox_app_id,  String,         :length => 256
+  property  :firefox_update_signature,    String,     :length => 256
   property  :chrome_app_id,   String,         :length => 256
   property  :safari_app_id,   String,         :length => 256
   property  :safari_dev_id,   String,         :length => 16
@@ -55,6 +56,7 @@ class AddonVersion
   property  :url_download,    String,         :length => 256
   property  :min_browser_version, String
   property  :max_browser_version, String
+  property  :update_hash,     String,         :length => 512
   property  :download_count,  Integer,        :default => 0
   property  :available,       Boolean
   property  :published,       Boolean,        :default => true
