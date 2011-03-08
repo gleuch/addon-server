@@ -68,6 +68,17 @@ get '/:slug/downloads/:browser' do
   redirect "#{@version.url_download.gsub(/%data%/i, params[:data] || '')}", :status => 307 # Is this right code?
 end
 
+get '/:slug.json' do
+  # content_type :json
+  @addon = Addon.available.published.first(:slug => params[:slug]) rescue nil
+  unless @addon.blank?
+    str = {:name => @addon.name, :download_count => @addon.download_count}
+  else
+    str = {:error => "Add-on not found."}
+  end
+
+  !params[:c].blank? ? "#{params[:c]}(#{str.to_json})" : str.to_json
+end
 
 # Show info for add-on
 get '/:slug' do

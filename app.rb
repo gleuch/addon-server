@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 
-libs = %w(haml configatron logger rack-flash dm-core dm-timestamps dm-validations dm-ar-finders dm-aggregates dm-types libs/models libs/helpers libs/libs)
+libs = %w(haml configatron logger rack-flash json dm-core dm-timestamps dm-validations dm-ar-finders dm-aggregates dm-types libs/models libs/helpers libs/libs)
 %w(developer admin addons).each{|r| libs << "libs/#{r}/actions"}
 
 libs << 'sinatra-authentication'
@@ -9,6 +9,9 @@ libs.each{|lib| require lib}
 
 use Rack::Session::Cookie, :secret => 'ARTZILLA IZ SICK!!!!'
 use Rack::Flash
+
+# set :environment, :production
+
 
 # Configure! ---------------------------------------
 configure do |config|
@@ -39,19 +42,19 @@ end
 # 404 (file not found) errors
 not_found do
   @error ||= 'Sorry, but the page you were looking for could not be found.'
-  haml :fail, :status => 404
+  haml :fail, :status => 404, :layout => :error
 end
 error MissingInfo do
   @error ||= request.env['sinatra.error'].message
   @error ||= 'Sorry, but the add-on you were looking for could not be found.'
-  haml :fail, :status => 404
+  haml :fail, :status => 404, :layout => :error
 end
 
 # 500 (unspecific) errors
 error do
   @error ||= request.env['sinatra.error'].message
   @error ||= "You have encountered an undocumented error."
-  haml :fail, :status => 500
+  haml :fail, :status => 500, :layout => :error
 end
 
 

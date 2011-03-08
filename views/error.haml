@@ -10,21 +10,7 @@
       %header#header.c
         %h1#logo.left
           %a{:href => '/'}= configatron.site_name
-        %nav#nav.left
-          %dl.c
-            %dd.left
-              %a{:href => '/latest'} Latest
-            %dd.left
-              %a{:href => '/popular'} Popular
 
-        - if configatron.allow_submissions
-          %aside.right
-            %dl.c
-              %dd.left
-                %a{:href => '/submit'} Submit Your Add-on
-              - unless current_user
-                %dd.left
-                  %a{:href => '/login'} Login
     
       - unless flash.blank?
         %details#flashes
