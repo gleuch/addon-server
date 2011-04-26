@@ -9,5 +9,7 @@
         %ul
           - addon.each_with_index do |version, i|
             %li
-              %a{:href => "/#{@addon.slug}/download/#{browser}?version=#{version.version}"}
-                #{@addon.name}, Version #{version.version}
+              %h4
+                %a{:href => "/#{@addon.slug}/download/#{browser}?version=#{version.version}"}
+                  #{@addon.name}, Version #{version.version}
+              %p Downloaded: #{version.downloads_count}

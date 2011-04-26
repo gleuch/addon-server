@@ -75,5 +75,7 @@ article.addon .photo img {width: 128px; height: 128px;}
 #addon_downloads_list .browser {padding: 6px 0 12px 0;}
 #addon_downloads_list .browser ul {padding: 6px 0 0 0;}
 #addon_downloads_list .browser ul li {padding: 8px 0 2px 16px; margin: 8px 0 0 24px; font-size: 12px; border-top: 1px solid #efefef;}
-#addon_downloads_list .browser ul li:first-child a {font-weight: bold; font-size: 16px;}
+#addon_downloads_list .browser ul li h4 {font-size: 12px; padding: 0 0 2px 0;}
+#addon_downloads_list .browser ul li:first-child h4 {font-weight: bold; font-size: 16px;}
 #addon_downloads_list .browser ul li:first-child {border-top: none; padding-left: 8px;}
+#addon_downloads_list .browser ul li p {font-size: 11px; color: #424242;}

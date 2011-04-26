@@ -67,6 +67,9 @@ class AddonVersion
   def self.available; all(:available => true); end
   def self.published; all(:published => true); end
 
+  # These are temp if called in public views. Logger should incremenet the download counter on this table.
+  def downloads_count; AddonDownload.sum(:download_count, :addon_id => self.addon_id, :addon_version_id => self.id).to_i rescue 0; end
+  def unique_download_count; AddonDownload.sum(:unique_count, :addon_id => self.id, :addon_version_id => self.id).to_i rescue 0; end
 
   belongs_to :addon
   has n,  :downloads,   :model => 'AddonDownload',  :order => [:download_date.desc]
