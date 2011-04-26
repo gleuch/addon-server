@@ -1,0 +1,13 @@
+%style{:type => "text/css"} #header, footer.boxed {display: none;}
+#addon_downloads_list
+  %h1 Downloads for #{@addon.name}:
+
+  - unless @versions.blank?
+    - @versions.each do |browser, addon|
+      .browser
+        %h2= browser_display_title(browser)
+        %ul
+          - addon.each_with_index do |version, i|
+            %li
+              %a{:href => "/#{@addon.slug}/download/#{browser}?version=#{version.version}"}
+                #{@addon.name}, Version #{version.version}

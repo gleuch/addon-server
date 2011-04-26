@@ -68,3 +68,12 @@ body {background: #fff; font-size: 62.5%;}
 article.addon {}
 article.addon .photo {}
 article.addon .photo img {width: 128px; height: 128px;}
+
+
+#addon_downloads_list {padding: 45px 0 35px 0;}
+#addon_downloads_list h1 {padding: 0 0 12px 0;}
+#addon_downloads_list .browser {padding: 6px 0 12px 0;}
+#addon_downloads_list .browser ul {padding: 6px 0 0 0;}
+#addon_downloads_list .browser ul li {padding: 8px 0 2px 16px; margin: 8px 0 0 24px; font-size: 12px; border-top: 1px solid #efefef;}
+#addon_downloads_list .browser ul li:first-child a {font-weight: bold; font-size: 16px;}
+#addon_downloads_list .browser ul li:first-child {border-top: none; padding-left: 8px;}
