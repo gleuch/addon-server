@@ -104,7 +104,7 @@ get '/:slug.json' do
   # content_type :json
   @addon = Addon.available.published.first(:slug => params[:slug]) rescue nil
   unless @addon.blank?
-    str = {:name => @addon.name, :download_count => @addon.download_count}
+    str = {:name => @addon.name, :download_count => @addon.download_count, :download_pretty_count => @addon.download_count.commify}
   else
     str = {:error => "Add-on not found."}
   end
