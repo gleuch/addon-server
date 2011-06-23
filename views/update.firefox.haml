@@ -18,3 +18,5 @@
                   %em:maxVersion= firefox_max_browser(version.max_browser_version)
                   %em:updateLink= version.url_download.gsub(/%data%/i, params[:data] || '')
                   %em:updateInfoURL http://#{request.env['HTTP_HOST']}/#{params[:slug]}/updates/#{params[:browser]}/info
+                  - unless version.update_hash.blank?
+                    %em:updateHash= version.update_hash
