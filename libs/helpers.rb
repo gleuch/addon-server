@@ -77,7 +77,7 @@ helpers do
   end
   # Max Firefox version
   def firefox_max_browser(vers = nil)
-    !vers.blank? ? vers : '4.0b2'
+    !vers.blank? ? vers : '6.*'
   end
 
 
