@@ -37,7 +37,7 @@ class Addon
 
 
   belongs_to  :user,    :model => 'DmUser'
-  has n,  :versions,    :model => 'AddonVersion',   :order => [:version.desc]
+  has n,  :versions,    :model => 'AddonVersion',   :order => [:created_at.desc]
   has n,  :downloads,   :model => 'AddonDownload',  :order => [:download_date.desc]
 end
 
